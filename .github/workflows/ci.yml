@@ -69,7 +69,7 @@ jobs:
 
       - name: Rodar testes unitários
         run: |
-          docker compose -f docker-compose.unit.yml up --build --abort-on-container-exit --exit-code-from node-unit
+          docker compose -f docker-compose.unit.yml up --build --abort-on-container-exit --exit-code-from  node-unit-test
 
       - name: Upload coverage report (unit)
         if: success() || failure()
@@ -95,7 +95,7 @@ jobs:
 
       - name: Rodar testes de integração
         run: |
-          docker compose -f docker-compose.integration.yml up --build --abort-on-container-exit --exit-code-from node-e2e-test
+          docker compose -f docker-compose.integration.yml up --build --abort-on-container-exit --exit-code-from node-integration-test
 
       - name: Upload coverage report (integration)
         if: success() || failure()

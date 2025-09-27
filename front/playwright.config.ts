@@ -31,7 +31,7 @@ export default defineConfig({
     },
   ],
 
-    // Só inicia webServer em ambiente local
+  // Só inicia webServer em ambiente local
   ...(process.env.CI !== "true"
     ? {
         webServer: {

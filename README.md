@@ -61,6 +61,36 @@ app/
 ├── db/                     
 │   └── init.sql 
 │
+├── front/  
+│   ├── public/   
+│   ├── src/
+│   │   ├── api/
+│   │   ├── components/
+│   │   ├── contexts/
+│   │   ├── layouts/
+│   │   ├── pages/
+│   │   ├── styles/
+│   │   ├── types/
+│   │   ├── App.tsx
+│   │   └── main.tsx
+│   ├── tests/
+│   │   ├── e2e/
+│   │   │   ├── changePassword.spec.ts
+│   │   │   ├── dashboard.spec.ts
+│   │   │   ├── login.spec.ts
+│   │   │   └── register.spec.ts
+│   │   └── pages/
+│   │       ├── ChangePasswordPage.ts
+│   │       ├── DashboardPage.ts
+│   │       ├── LoginPage.ts
+│   │       └── RegisterPage.ts
+│   ├── Dockerfile.e2e.front   # Usado por e2e da pasta front
+│   ├── Dockerfile.production
+│   ├── nginx.e2e.conf         # Usado por e2e da pasta front
+│   ├── nginx.production.conf  # Usado para subir em modo de produção
+│   ├── package.json
+│   └── playwright.config.ts
+│
 ├── server/  
 │   ├── src/                     # Código da aplicação
 │   │   ├── configs/             # Conexão com Postgres e Redis
