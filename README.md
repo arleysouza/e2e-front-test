@@ -1,51 +1,34 @@
-## Testes end-to-end no CI
+## Testes end-to-end no frontend
 
-Este projeto demonstra o uso de testes unitários, testes de integração e testes end-to-end em uma aplicação Node.js/TypeScript com Express, incluindo:
-
-- Banco de dados PostgreSQL
-- Redis para blacklist de tokens
-- Autenticação com JWT
-- Docker/Docker Compose para isolar os recursos de teste
-- Jest + Supertest para escrever e executar os testes automatizados
-- GitHub Actions para o pipeline de CI
+Este projeto demonstra como estruturar e executar testes end-to-end (E2E) no frontend com Playwright, Docker e CI/CD no GitHub Actions.
+A aplicação é composta por Node.js/Express no backend e React + Vite no frontend, integrados a PostgreSQL e Redis.
 
 
----
+--- 
 
-### Testes end-to-end
+### 🎯 O que são Testes E2E?
 
-Testes End-to-End validam um fluxo completo de negócio do ponto de vista do usuário (humano ou sistema externo), exercitando todas as camadas relevantes da aplicação: interface (UI ou API), backend, banco de dados, cache, fila, etc.
-A pergunta que um E2E responde é:
-*“Quando alguém usa o sistema para realizar X, o resultado ocorre como esperado?”*
-
-No nosso projeto (API Node.js/Express com PostgreSQL e Redis), um E2E típico seria:
-1. Registrar usuário (POST /users);
-2. Efetuar login (POST /users/login) e receber o JWT;
-3. Acessar rota protegida usando o JWT – mudar a própria senha (PATCH /users/password);
-4. Efetuar logout (POST /users/logout) e validar que o token foi blacklistado (Redis) e não funciona mais.
-Esses passos percorrem o sistema “de ponta a ponta”: desde a entrada HTTP até a persistência (Postgres) e a camada de segurança/estado (Redis).
-
-
-### 📌 Objetivo
-
-- Mostrar boas práticas em testes unitários, de integração e de ponta a ponta.
-- Isolar os testes em pastas dedicadas (tests/unit, tests/integration, tests/e2e).
-- Configurar Postgres e Redis de forma efêmera com Docker para os testes de integração/E2E.
-- Validar fluxos de autenticação (login, logout, blacklist de tokens) de ponta a ponta.
-- Integrar o pipeline de testes ao GitHub Actions usando Docker Compose.
+Testes end-to-end simulam o comportamento real do usuário, validando fluxos completos da aplicação, como:
+- Registrar um novo usuário;
+- Fazer login e navegar até o dashboard;
+- Alterar a senha e manter a sessão válida;
+- Tratar erros de autenticação (ex.: token inválido ou expirado);
+- Enquanto testes unitários validam funções isoladas e testes de integração verificam módulos combinados, os E2E garantem que tudo funciona junto — frontend + backend + banco + cache.
 
 
 ---
 
-### 🧑‍💻 Tecnologias Utilizadas
+### 🚀 Tecnologias Utilizadas
 
-- Node.js + TypeScript – aplicação principal
-- Express – servidor HTTP
-- PostgreSQL – banco de dados
-- Redis – armazenamento da blacklist de tokens JWT
-- Docker + Docker Compose – orquestração dos serviços de teste
-- Jest – framework de testes
-- Supertest – simulação de requisições HTTP para testes de integração/E2E
+- Playwright – framework de testes E2E
+- Page Object Pattern (POP) – abstração para interações estáveis com a UI
+- React + Vite – frontend
+- Node.js + Express – backend
+- PostgreSQL – persistência de dados
+- Redis – blacklist de tokens JWT
+- Nginx – servidor estático e proxy reverso /api → backend
+- Docker & Docker Compose – isolamento de ambiente
+- GitHub Actions – pipeline de CI/CD
 
 
 ---
@@ -84,31 +67,31 @@ app/
 │   │       ├── DashboardPage.ts
 │   │       ├── LoginPage.ts
 │   │       └── RegisterPage.ts
-│   ├── Dockerfile.e2e.front   # Usado por e2e da pasta front
+│   ├── Dockerfile.e2e.front   # Build front + stage de testes Playwright
 │   ├── Dockerfile.production
-│   ├── nginx.e2e.conf         # Usado por e2e da pasta front
-│   ├── nginx.production.conf  # Usado para subir em modo de produção
+│   ├── nginx.e2e.conf         # Proxy API → node-e2e-front
+│   ├── nginx.production.conf  # Proxy para ambiente produtivo
 │   ├── package.json
-│   └── playwright.config.ts
+│   └── playwright.config.ts   # Configuração Playwright
 │
 ├── server/  
-│   ├── src/                     # Código da aplicação
-│   │   ├── configs/             # Conexão com Postgres e Redis
-│   │   ├── controllers/         # Controllers (ex: user.controller.ts)
-│   │   ├── middlewares/         # Middlewares (auth, validação, erros)
-│   │   ├── routes/              # Rotas Express
-│   │   ├── types/               # Tipagem customizada
-│   │   ├── utils/               # Funções auxiliares (ex: JWT)
-│   │   └── index.ts             # Inicialização do servidor
-│   ├── tests/                   # Casos de teste (isolados da aplicação)
+│   ├── src/                     
+│   │   ├── configs/             
+│   │   ├── controllers/         
+│   │   ├── middlewares/         
+│   │   ├── routes/              
+│   │   ├── types/               
+│   │   ├── utils/               
+│   │   └── index.ts             
+│   ├── tests/                   
 │   │   ├── e2e/
 │   │   │   ├── api.e2e.test.ts
 │   │   │   ├── infra.e2e.test.ts
 │   │   │   └── user.e2e.test.ts 
 │   │   ├── integration/
-│   │   │   ├── controllers/         # Testes de controllers com Supertest
+│   │   │   ├── controllers/         
 │   │   │   │   └── user.controller.test.ts
-│   │   │   └── helpers/             # App de teste sem app.listen()
+│   │   │   └── helpers/            
 │   │   ├── unit/
 │   │   │   ├── controllers/ 
 │   │   │   │   └── user.controller.test.ts
@@ -149,7 +132,7 @@ app/
 ### ▶️ Execução Local
 
 
-1. Clonar o repositório e instalar dependências:
+1. Clonar o repositório:
 
 ```bash
 git clone https://github.com/arleysouza/e2e-front-test.git app
@@ -216,11 +199,97 @@ Remover containers:
 docker compose -f docker-compose.e2e-front.yml down -v
 ```
 **Observação**
-Ao usar o comando `docker logs front-e2e-test` aparece só parte da saída (*Running 11 tests…* e os hints do dotenv).
-Já no Docker Desktop você vê o log completo dos testes (11 passed).
-Isso acontece porque o Playwright escreve saída colorida e em tempo real no TTY, e quando o container não está em attached mode (-d), parte desse fluxo pode ficar “bufferizado”
+- Os logs no terminal podem mostrar apenas parte da saída (ex.: *Running 11 tests…*).
+- Para ver os resultados completos, use o Docker Desktop ou rode sem `-d` (modo attached).
+
+
+--- 
+
+### 🔑 Page Object Pattern (POPs)
+
+Cada tela da aplicação possui uma classe em tests/pages/, que encapsula:
+- Ações do usuário: `fillUsername()`, `submit()`, `logout()`;
+- Validações: `expectError()`, `expectSuccess()`, `expectOnPage()`;
+Isso garante testes mais limpos, reutilizáveis e estáveis.
+Exemplo simplificado (`LoginPage`):
+```ts
+export class LoginPage {
+  constructor(private page: Page) {}
+
+  async goto() {
+    await this.page.goto("/login");
+  }
+
+  async fillUsername(username: string) {
+    await this.page.fill("[data-testid='login-username']", username);
+  }
+
+  async fillPassword(password: string) {
+    await this.page.fill("[data-testid='login-password']", password);
+  }
+
+  async submit() {
+    await this.page.click("[data-testid='login-submit']");
+  }
+
+  async expectError(message: string) {
+    await expect(this.page.locator("[data-testid='login-error']")).toHaveText(message);
+    await expect(this.page).toHaveURL(/.*login/);
+  }
+}
+```
+
 
 ---
+
+### ⚙️ Configurações do Nginx
+
+`nginx.production.conf`
+- Proxy `/api/` para `node-app:3000`
+- Cache para assets estáticos
+- Roteamento SPA (`try_files $uri /index.html`)
+
+`nginx.e2e.conf`
+- Mesmo proxy, mas apontando para `node-e2e-front:3000` (container de testes).
+- Garante que os testes Playwright consigam usar `/api/*` sem precisar expor variáveis adicionais no frontend.
+
+---
+
+### ⚙️ Configuração do Playwright (playwright.config.ts)
+
+- Define `baseURL` dinamicamente:
+  - Local: `http://localhost:${FRONT_HOST_PORT}`
+  - CI (Docker): `http://front-e2e-front:80`
+- Roda sempre em headless mode no CI
+- Habilita retries (2x) para maior resiliência
+- Gera relatórios em HTML e line reporter
+
+Exemplo:
+```ts
+import { defineConfig, devices } from "@playwright/test";
+import * as dotenv from "dotenv";
+
+dotenv.config();
+
+const baseURL =
+  process.env.CI === "true"
+    ? "http://front-e2e-front:80"
+    : `http://localhost:${process.env.FRONT_HOST_PORT || 3003}`;
+
+export default defineConfig({
+  testDir: "./tests/e2e",
+  retries: 2,
+  use: {
+    baseURL,
+    headless: true,
+    trace: "on-first-retry",
+    screenshot: "only-on-failure",
+    video: "retain-on-failure",
+  },
+  projects: [{ name: "Chromium", use: { ...devices["Desktop Chrome"] } }],
+});
+
+```
 
 ### Fluxo de Execução dos Testes
 
