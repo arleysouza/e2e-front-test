@@ -150,23 +150,12 @@ jobs:
           docker compose --env-file .env.e2e.front -f docker-compose.e2e-front.yml \
             up --build --abort-on-container-exit --exit-code-from front-e2e-test
 
-      - name: Listar relatórios Playwright
-        if: success() || failure()
-        run: ls -R front || true
-
       - name: Upload Playwright HTML Report
         if: success() || failure()
         uses: actions/upload-artifact@v4
         with:
           name: playwright-html-report
           path: front/playwright-report
-
-      - name: Upload Playwright Traces & Media
-        if: success() || failure()
-        uses: actions/upload-artifact@v4
-        with:
-          name: playwright-traces
-          path: front/test-results
 
       - name: Derrubar containers
         if: always()

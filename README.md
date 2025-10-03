@@ -259,5 +259,6 @@ flowchart TD
     G --> J[Upload Coverage Unit]
     H --> K[Upload Coverage Integration]
     I --> L[Upload Coverage E2E]
+    D --> M[Upload Playwright HTML Report]
 ```
 
