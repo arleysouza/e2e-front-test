@@ -59,7 +59,7 @@ services:
     networks:
       - e2e-network
     volumes:
-      - ./coverage:/app/coverage
+      - ./server/coverage:/app/coverage
     command: sh -c "npx wait-on tcp:postgres-e2e:5432 tcp:redis-e2e:6379 http://node-e2e:3000/health && npm run test:e2e"
 
 networks:

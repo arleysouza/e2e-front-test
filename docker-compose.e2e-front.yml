@@ -56,8 +56,6 @@ services:
       timeout: 3s
       retries: 15
       start_period: 10s
-    volumes:
-      - ./server/coverage:/app/coverage
 
   front-e2e-front:
     build:
