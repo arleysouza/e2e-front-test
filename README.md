@@ -245,15 +245,15 @@ flowchart TD
     A[Commit / Pull Request] --> B[GitHub Actions Runner]
 
     %% Frontend
-    B --> C[Job: Lint & Prettier (Front)]
-    B --> D[Job: E2E Tests (Front)]
+    B --> C[Job: Lint & Prettier - Front]
+    B --> D[Job: E2E Tests - Front]
 
     %% Backend
-    B --> E[Job: Lint & Prettier (Server)]
-    B --> F[Job: Build (Server)]
-    F --> G[Job: Unit Tests (Server)]
-    F --> H[Job: Integration Tests (Server)]
-    F --> I[Job: E2E Tests (Server)]
+    B --> E[Job: Lint & Prettier - Server]
+    B --> F[Job: Build - Server]
+    F --> G[Job: Unit Tests - Server]
+    F --> H[Job: Integration Tests - Server]
+    F --> I[Job: E2E Tests - Server]
 
     %% Coverage uploads
     G --> J[Upload Coverage Unit]
