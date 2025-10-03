@@ -246,7 +246,7 @@ flowchart TD
 
     %% Frontend
     B --> C[Job: Lint & Prettier - Front]
-    B --> D[Job: E2E Tests - Front]
+    C --> D[Job: E2E Tests - Front]
 
     %% Backend
     B --> E[Job: Lint & Prettier - Server]
