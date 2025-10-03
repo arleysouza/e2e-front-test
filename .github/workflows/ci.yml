@@ -122,7 +122,11 @@ jobs:
       - name: Rodar testes E2E
         run: |
           docker compose --env-file .env.e2e.server -f docker-compose.e2e-server.yml up --build --abort-on-container-exit --exit-code-from node-e2e-test
-
+      
+      - name: Listar conteúdo de coverage
+        if: success() || failure()
+        run: ls -R server/coverage || true
+      
       - name: Upload coverage report (e2e)
         if: success() || failure()
         uses: actions/upload-artifact@v4

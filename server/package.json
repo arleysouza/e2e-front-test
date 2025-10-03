@@ -9,8 +9,8 @@
     "lint": "eslint . --ext .ts,.js",
     "build": "tsc",
     "test:ci": "jest --config=jest.integration.config.js --coverage --detectOpenHandles --forceExit",
-    "test:e2e": "jest --config=jest.e2e.config.js --runInBand",
-    "test:unit": "jest --config=jest.unit.config.js"
+    "test:e2e": "jest --config=jest.e2e.config.js --runInBand --coverage",
+    "test:unit": "jest --config=jest.unit.config.js --coverage"
   },
   "license": "MIT",
   "type": "commonjs",
