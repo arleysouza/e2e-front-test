@@ -16,7 +16,6 @@ RUN npm run build
 # Etapa 2: Test runner com Playwright
 FROM mcr.microsoft.com/playwright:v1.55.1-jammy AS tests
 
-
 WORKDIR /usr/src/app
 COPY --from=build /usr/src/app ./
 RUN npm ci
