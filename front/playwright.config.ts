@@ -14,8 +14,11 @@ export default defineConfig({
     timeout: 5000,
   },
   retries: 2, // reexecuta até 2x em caso de falha
-  reporter: [["list"], ["html", { open: "never" }]],
-
+  reporter: [
+    ["list"],
+    ["html", { outputFolder: "playwright-report", open: "never" }],
+  ],
+  outputDir: "test-results",
   use: {
     baseURL, // front rodando no docker
     headless: true, // sempre headless

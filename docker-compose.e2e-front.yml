@@ -92,7 +92,7 @@ services:
     depends_on:
       front-e2e-front:
         condition: service_healthy
-    command: ["npx", "playwright", "test", "--reporter=line"]
+    command: ["npx", "playwright", "test", "--reporter=line", "--reporter=html"]
     volumes:
       - ./front/playwright-report:/usr/src/app/playwright-report
       - ./front/test-results:/usr/src/app/test-results
