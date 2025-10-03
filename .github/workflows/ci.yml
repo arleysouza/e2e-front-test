@@ -147,16 +147,17 @@ jobs:
 
       - name: Rodar testes E2E Front
         run: |
-          docker compose --env-file .env.e2e.front -f docker-compose.e2e-front.yml up --build --abort-on-container-exit --exit-code-from front-e2e-test
+          docker compose --env-file .env.e2e.front -f docker-compose.e2e-front.yml \
+            up --build --abort-on-container-exit --exit-code-from front-e2e-test
 
-      - name: Upload Playwright Report
-        if: success() || failure() # faz upload mesmo se o job falhar
+      - name: Upload Playwright HTML Report
+        if: success() || failure()
         uses: actions/upload-artifact@v4
         with:
-          name: playwright-report
+          name: playwright-html-report
           path: front/playwright-report
 
-      - name: Upload Playwright Traces
+      - name: Upload Playwright Traces & Media
         if: success() || failure()
         uses: actions/upload-artifact@v4
         with:
